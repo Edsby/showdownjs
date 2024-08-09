@@ -5,6 +5,7 @@
 if (!showdown.hasOwnProperty('helper')) {
   showdown.helper = {};
 }
+/* escape undesireable html tags */
 
 /**
  * Check if var is string

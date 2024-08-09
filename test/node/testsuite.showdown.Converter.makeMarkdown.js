@@ -16,7 +16,7 @@ describe('showdown.Converter', function () {
 
     it('should parse a simple html string', function () {
       var html = '<a href="/somefoo.html">a link</a>\n';
-      var md   = '[a link](</somefoo.html>)';
+      var md   = '[a link](/somefoo.html)';
 
       converter.makeMd(html, document).should.equal(md);
     });

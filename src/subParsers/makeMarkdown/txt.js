@@ -10,14 +10,24 @@ showdown.subParser('makeMarkdown.txt', function (node) {
   txt = txt.replace(/¨NBSP;/g, ' ');
 
   // ", <, > and & should replace escaped html entities
-  txt = showdown.helper.unescapeHTMLEntities(txt);
+  //txt = cf.mlescape(txt);
+  //txt = showdown.helper.unescapeHTMLEntities(txt);
 
   // escape markdown magic characters
   // emphasis, strong and strikethrough - can appear everywhere
   // we also escape pipe (|) because of tables
   // and escape ` because of code blocks and spans
   txt = txt.replace(/([*_~|`])/g, '\\$1');
-
+  let indentingPreservedTxt = '';
+  for (let i = 0; i < txt.length; i++) {
+    if (txt.charAt(i) === ' ') {
+      indentingPreservedTxt = indentingPreservedTxt + '&nbsp;';
+    } else {
+      indentingPreservedTxt = indentingPreservedTxt + txt.substr(i);
+      txt = indentingPreservedTxt;
+      break;
+    }
+  }
   // escape > because of blockquotes
   txt = txt.replace(/^(\s*)>/g, '\\$1>');
 

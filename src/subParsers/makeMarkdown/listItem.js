@@ -1,4 +1,4 @@
-showdown.subParser('makeMarkdown.listItem', function (node, globals) {
+showdown.subParser('makeMarkdown.listItem', function (node, options, globals) {
   'use strict';
 
   var listItemTxt = '';
@@ -7,10 +7,11 @@ showdown.subParser('makeMarkdown.listItem', function (node, globals) {
       childrenLenght = children.length;
 
   for (var i = 0; i < childrenLenght; ++i) {
-    listItemTxt += showdown.subParser('makeMarkdown.node')(children[i], globals);
+    listItemTxt += showdown.subParser('makeMarkdown.node')(children[i], options, globals);
   }
+  listItemTxt = listItemTxt.trim();
   // if it's only one liner, we need to add a newline at the end
-  if (!/\n$/.test(listItemTxt)) {
+  if (!/\n/.test(listItemTxt)) {
     listItemTxt += '\n';
   } else {
     // it's multiparagraph, so we need to indent

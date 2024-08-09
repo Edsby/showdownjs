@@ -1,1 +1,1 @@
-[some link](</url> "a title")
+[some link](/url "a title")

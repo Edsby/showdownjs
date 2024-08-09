@@ -1,1 +1,1 @@
-some `code` span
+some `code`&nbsp;span

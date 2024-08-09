@@ -1,5 +1,3 @@
-
-
 showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
   'use strict';
 
@@ -23,7 +21,7 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
   }
 
   var tagName = node.tagName.toLowerCase();
-
+  let innertxt;
   switch (tagName) {
 
     //
@@ -108,7 +106,19 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
     case 'img':
       txt = showdown.subParser('makeMarkdown.image')(node, globals);
       break;
-
+    /** custom handlers not in vanilla showdown */
+    case 'sup':
+      innertxt = showdown.subParser('makeMarkdown.paragraph')(node, globals).trim();
+      txt = `<sup>${innertxt}</sup>`;
+      break;
+    case 'sub':
+      innertxt = showdown.subParser('makeMarkdown.paragraph')(node, globals).trim();
+      txt = `<sub>${innertxt}</sub>`;
+      break;
+    case 'br':
+      txt += '<br>';
+      break;
+    /** end */
     default:
       txt = node.outerHTML + '\n\n';
   }

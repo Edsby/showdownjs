@@ -7,7 +7,7 @@
   'use strict';
 
   require('source-map-support').install();
-  require('chai').should();
+  //require('chai').should();
   var fs = require('fs');
   var jsdom = require('jsdom');
   var document = new jsdom.JSDOM('', {}).window.document; // jshint ignore:line
@@ -66,7 +66,7 @@
   function assertion (testCase, converter, type) {
     return function () {
       //var conv = (type === 'makeMd') ? converter.makeMd : converter.makeHtml;
-
+      //if ((type === 'makeMd')) {console.log({'actual': converter.makeMd(testCase.input, document), 'expected': testCase.expected});}
       testCase.actual = (type === 'makeMd') ? converter.makeMd(testCase.input, document) : converter.makeHtml(testCase.input);
       testCase = normalize(testCase);
 
