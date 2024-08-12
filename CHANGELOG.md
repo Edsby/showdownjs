@@ -1,3 +1,8 @@
+<a name="2.1.2"></a>
+## [2.1.2](https://github.com/showdownjs/showdown/compare/2.1.1...2.1.2) (2024-08-12)
+
+
+
 <a name="2.1.1-edsby"></a>
 ## [2.1.1-edsby](https://github.com/showdownjs/showdown/compare/2.1.0...2.1.1-edsby) (2024-08-09)
 

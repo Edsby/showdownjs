@@ -1,4 +1,4 @@
-;/*! showdown v 2.1.1 - 09-08-2024 */
+;/*! showdown v 2.1.2 - 12-08-2024 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -4809,7 +4809,20 @@ showdown.subParser('makeMarkdown.list', function (node, globals, type) {
       listNum = node.getAttribute('start') || 1;
 
   for (var i = 0; i < listItemsLenght; ++i) {
-    if (typeof listItems[i].tagName === 'undefined' || listItems[i].tagName.toLowerCase() !== 'li') {
+    let tagName = (listItems[i].tagName || '').toLowerCase();
+    if (tagName !== 'li') {
+      if (tagName !== '') {
+        let subnodeTxt = showdown.subParser('makeMarkdown.node')(listItems[i], globals).trim();
+        if (subnodeTxt.length > 0) {
+          let parts = subnodeTxt.split('\n');
+          for (let lineidx in parts) {
+            if (parts[lineidx].trim().length > 0 && parts[lineidx].trim() !== '<!-- -->') {
+              parts[lineidx] = `    ${parts[lineidx]}`;
+            }
+          }
+          txt += parts.join('\n') + '\n';
+        }
+      }
       continue;
     }
 
@@ -4842,7 +4855,9 @@ showdown.subParser('makeMarkdown.listItem', function (node, options, globals) {
   for (var i = 0; i < childrenLenght; ++i) {
     listItemTxt += showdown.subParser('makeMarkdown.node')(children[i], options, globals);
   }
-  listItemTxt = listItemTxt.trim();
+  if (!listItemTxt.endsWith('<!-- -->\n\n')) {
+    listItemTxt = listItemTxt.trim();
+  }
   // if it's only one liner, we need to add a newline at the end
   if (!/\n/.test(listItemTxt)) {
     listItemTxt += '\n';

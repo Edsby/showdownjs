@@ -9,7 +9,9 @@ showdown.subParser('makeMarkdown.listItem', function (node, options, globals) {
   for (var i = 0; i < childrenLenght; ++i) {
     listItemTxt += showdown.subParser('makeMarkdown.node')(children[i], options, globals);
   }
-  listItemTxt = listItemTxt.trim();
+  if (!listItemTxt.endsWith('<!-- -->\n\n')) {
+    listItemTxt = listItemTxt.trim();
+  }
   // if it's only one liner, we need to add a newline at the end
   if (!/\n/.test(listItemTxt)) {
     listItemTxt += '\n';

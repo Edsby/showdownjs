@@ -10,7 +10,20 @@ showdown.subParser('makeMarkdown.list', function (node, globals, type) {
       listNum = node.getAttribute('start') || 1;
 
   for (var i = 0; i < listItemsLenght; ++i) {
-    if (typeof listItems[i].tagName === 'undefined' || listItems[i].tagName.toLowerCase() !== 'li') {
+    let tagName = (listItems[i].tagName || '').toLowerCase();
+    if (tagName !== 'li') {
+      if (tagName !== '') {
+        let subnodeTxt = showdown.subParser('makeMarkdown.node')(listItems[i], globals).trim();
+        if (subnodeTxt.length > 0) {
+          let parts = subnodeTxt.split('\n');
+          for (let lineidx in parts) {
+            if (parts[lineidx].trim().length > 0 && parts[lineidx].trim() !== '<!-- -->') {
+              parts[lineidx] = `    ${parts[lineidx]}`;
+            }
+          }
+          txt += parts.join('\n') + '\n';
+        }
+      }
       continue;
     }
 
