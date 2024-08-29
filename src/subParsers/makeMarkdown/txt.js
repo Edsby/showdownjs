@@ -11,6 +11,7 @@ showdown.subParser('makeMarkdown.txt', function (node) {
 
   // ", <, > and & should replace escaped html entities
   //txt = cf.mlescape(txt);
+  txt = txt.replaceAll('>', '&gt;').replaceAll('<', '&lt;');
   //txt = showdown.helper.unescapeHTMLEntities(txt);
 
   // escape markdown magic characters

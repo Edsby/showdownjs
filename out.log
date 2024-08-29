@@ -1,0 +1,8 @@
+yarn run v1.22.19
+$ /Users/timon/Documents/GitHub/showdownjs/node_modules/.bin/grunt build
+Running "clean:0" (clean) task
+>> 1 path cleaned.
+
+Running "lint" task
+
+Running "jshint:files" (jshint) task

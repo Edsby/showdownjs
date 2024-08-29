@@ -11,6 +11,10 @@ showdown.subParser('makeMarkdown.listItem', function (node, options, globals) {
   }
   if (!listItemTxt.endsWith('<!-- -->\n\n')) {
     listItemTxt = listItemTxt.trim();
+    let listItemTxtLines = listItemTxt.split('\n');
+    if (listItemTxtLines[listItemTxtLines.length - 1].startsWith(' ')) {
+      listItemTxt = listItemTxt + '\n\n';
+    }
   }
   // if it's only one liner, we need to add a newline at the end
   if (!/\n/.test(listItemTxt)) {

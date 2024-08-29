@@ -66,7 +66,7 @@
   function assertion (testCase, converter, type) {
     return function () {
       //var conv = (type === 'makeMd') ? converter.makeMd : converter.makeHtml;
-      //if ((type === 'makeMd')) {console.log({'actual': converter.makeMd(testCase.input, document), 'expected': testCase.expected});}
+      if ((type === 'makeMd')) {console.log({'actual': converter.makeMd(testCase.input, document), 'expected': testCase.expected});}
       testCase.actual = (type === 'makeMd') ? converter.makeMd(testCase.input, document) : converter.makeHtml(testCase.input);
       testCase = normalize(testCase);
 

@@ -22,6 +22,7 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
 
   var tagName = node.tagName.toLowerCase();
   let innertxt;
+  let inline = (!txt.match(/\s^/m)) && txt.length > 0;
   switch (tagName) {
 
     //
@@ -87,7 +88,8 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
 
     case 'em':
     case 'i':
-      txt = showdown.subParser('makeMarkdown.emphasis')(node, globals);
+      let nodeTxt = showdown.subParser('makeMarkdown.emphasis')(node, {'inline': inline}, globals);
+      txt += nodeTxt;
       break;
 
     case 'strong':
@@ -117,6 +119,13 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
       break;
     case 'br':
       txt += '<br>';
+      break;
+    case 'details':
+      txt = showdown.subParser('makeMarkdown.details')(node, globals).trim() + '\n\n';
+      break;
+    case 'summary':
+      innertxt = showdown.subParser('makeMarkdown.summary')(node, globals).trim();
+      txt = `<summary>${innertxt}</summary>\n\n`;
       break;
     /** end */
     default:

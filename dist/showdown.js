@@ -1,4 +1,4 @@
-;/*! showdown v 2.1.2 - 12-08-2024 */
+;/*! showdown v 2.1.3 - 29-08-2024 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -4687,9 +4687,39 @@ showdown.subParser('makeMarkdown.codeSpan', function (node) {
   return '`' + node.innerHTML + '`';
 });
 
+showdown.subParser('makeMarkdown.details', function (node, options, globals) {
+  'use strict';
+  const openingPrefix = '??? ', lineIndent = '    ';
+
+  var txt = '';
+  if (node.hasChildNodes()) {
+    let summaryContent = false;
+    let contentLines = [];
+    let children = node.childNodes,
+        childrenLength = children.length;
+    for (var i = 0; i < childrenLength; ++i) {
+      let childNode = children[i];
+      if (childNode.nodeType === 3 || children[i].tagName.toLowerCase() !== 'summary') {
+        let contentLinesSplit = showdown.subParser('makeMarkdown.node')(childNode, options, globals).split('\n');
+        for (let lineIdx in contentLinesSplit) {
+          contentLines.push(`${lineIndent}${contentLinesSplit[lineIdx]}`);
+        }
+      } else if (children[i].tagName.toLowerCase() === 'summary') {
+        summaryContent = showdown.subParser('makeMarkdown.paragraph')(childNode, options, globals).trim();
+      }
+    }
+    return [`${openingPrefix}"${summaryContent.replaceAll('\"', '&quot;')}"`, ...contentLines].join('\n') + '\n';
+  }
+
+  // some text normalization
+  txt = txt.trim() + '\n\n';
+
+  return txt;
+});
+
 showdown.subParser('makeMarkdown.emphasis', function (node, options, globals) {
   'use strict';
-  const delimiter = '_';
+  let delimiter = '*';
 
   let txt = '';
   if (node.hasChildNodes()) {
@@ -4857,6 +4887,10 @@ showdown.subParser('makeMarkdown.listItem', function (node, options, globals) {
   }
   if (!listItemTxt.endsWith('<!-- -->\n\n')) {
     listItemTxt = listItemTxt.trim();
+    let listItemTxtLines = listItemTxt.split('\n');
+    if (listItemTxtLines[listItemTxtLines.length - 1].startsWith(' ')) {
+      listItemTxt = listItemTxt + '\n\n';
+    }
   }
   // if it's only one liner, we need to add a newline at the end
   if (!/\n/.test(listItemTxt)) {
@@ -4897,6 +4931,7 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
 
   var tagName = node.tagName.toLowerCase();
   let innertxt;
+  let inline = (!txt.match(/\s^/m)) && txt.length > 0;
   switch (tagName) {
 
     //
@@ -4962,7 +4997,8 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
 
     case 'em':
     case 'i':
-      txt = showdown.subParser('makeMarkdown.emphasis')(node, globals);
+      let nodeTxt = showdown.subParser('makeMarkdown.emphasis')(node, {'inline': inline}, globals);
+      txt += nodeTxt;
       break;
 
     case 'strong':
@@ -4992,6 +5028,13 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
       break;
     case 'br':
       txt += '<br>';
+      break;
+    case 'details':
+      txt = showdown.subParser('makeMarkdown.details')(node, globals).trim() + '\n\n';
+      break;
+    case 'summary':
+      innertxt = showdown.subParser('makeMarkdown.summary')(node, globals).trim();
+      txt = `<summary>${innertxt}</summary>\n\n`;
       break;
     /** end */
     default:
@@ -5268,6 +5311,7 @@ showdown.subParser('makeMarkdown.txt', function (node) {
 
   // ", <, > and & should replace escaped html entities
   //txt = cf.mlescape(txt);
+  txt = txt.replaceAll('>', '&gt;').replaceAll('<', '&lt;');
   //txt = showdown.helper.unescapeHTMLEntities(txt);
 
   // escape markdown magic characters

@@ -1,4 +1,4 @@
 | head 1 | head 2 | head 3 |
 | ------ | ------ | ------ |
-| foo    | _bar_  | baz    |
+| foo    | *bar*  | baz    |
 | ~~a~~  | **b**  | `cccc` |

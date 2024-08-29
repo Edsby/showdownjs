@@ -1,6 +1,6 @@
 showdown.subParser('makeMarkdown.emphasis', function (node, options, globals) {
   'use strict';
-  const delimiter = '_';
+  let delimiter = '*';
 
   let txt = '';
   if (node.hasChildNodes()) {
