@@ -19,6 +19,9 @@ showdown.subParser('makeMarkdown.details', function (node, options, globals) {
         summaryContent = showdown.subParser('makeMarkdown.paragraph')(childNode, options, globals).trim();
       }
     }
+    if (!summaryContent) {
+      summaryContent = '';
+    }
     return [`${openingPrefix}"${summaryContent.replaceAll('\"', '&quot;')}"`, ...contentLines].join('\n') + '\n';
   }
 

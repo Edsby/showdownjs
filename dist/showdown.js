@@ -1,4 +1,4 @@
-;/*! showdown v 2.1.3 - 29-08-2024 */
+;/*! showdown v 2.1.4 - 18-09-2024 */
 (function(){
 /**
  * Created by Tivie on 13-07-2015.
@@ -4707,6 +4707,9 @@ showdown.subParser('makeMarkdown.details', function (node, options, globals) {
       } else if (children[i].tagName.toLowerCase() === 'summary') {
         summaryContent = showdown.subParser('makeMarkdown.paragraph')(childNode, options, globals).trim();
       }
+    }
+    if (!summaryContent) {
+      summaryContent = '';
     }
     return [`${openingPrefix}"${summaryContent.replaceAll('\"', '&quot;')}"`, ...contentLines].join('\n') + '\n';
   }
